@@ -1,11 +1,17 @@
 ﻿
 
-List<string> listaBandas = new List<string> { "The Score", "Imagine Dragons", "Glass Animals" };
+//List<string> listaBandas = new List<string> { "The Score", "Imagine Dragons", "Glass Animals" };
+using System.ComponentModel.Design;
 
+Dictionary<string, List<int>> bandasRegistradas = new Dictionary<string, List<int>>();
+bandasRegistradas.Add("Imagine Dragons",new List<int> { 10, 8, 6 });
+bandasRegistradas.Add("The Beatles", new List<int>());
 
 void ExibirLogo()
 {
-    Console.WriteLine(@"
+
+
+   Console.WriteLine(@"
 
 ░██████╗░█████╗░██████╗░███████╗███████╗███╗░░██╗  ░██████╗░█████╗░██╗░░░██╗███╗░░██╗██████╗░
 ██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝████╗░██║  ██╔════╝██╔══██╗██║░░░██║████╗░██║██╔══██╗
@@ -17,8 +23,10 @@ void ExibirLogo()
     Console.WriteLine("Boas vindas ao Screen Sound v1.0!");
 }
 
+
 void ExibirOpcoesDoMenu()
 {
+
     ExibirLogo();
     Console.WriteLine("\nDigite 1 para registrar uma banda");
     Console.WriteLine("Digite 2 para mostrar todas as bandas");
@@ -29,23 +37,16 @@ void ExibirOpcoesDoMenu()
     Console.Write("\nDigite a sua opção: ");
     string opcaoEscolhida = Console.ReadLine()!;
     int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
+
     switch (opcaoEscolhidaNumerica)
     {
         case 1: RegistrarBanda();
             break;
         case 2: BandasRegistradas();        
             break;
-        case 3: 
-            
+        case 3:AvaliarBanda();
             break;
-        case 4:
-            //Console.WriteLine("Você escolheu a opcão " + opcaoEscolhidaNumerica);
-            break;
-        case 5:
-            //Console.WriteLine("Você escolheu a opcão " + opcaoEscolhidaNumerica);
-            break;
-        case -1:
-            //Console.WriteLine("Você escolheu a opcão " + opcaoEscolhidaNumerica);
+        case 4: MediaBanda();
             break;
         default: Console.WriteLine("Opção inválida.");
             break;
@@ -58,7 +59,7 @@ void RegistrarBanda()
     ExibirTituloOpcoes("Registrar Banda");
     Console.WriteLine("Digite o nome da banda que deseja registrar: ");
     string nomeBanda = Console.ReadLine()!;
-    listaBandas.Add(nomeBanda); //push -> add
+    bandasRegistradas.Add(nomeBanda, new List<int>());
     Console.WriteLine($"A banda {nomeBanda} foi registrada!");
     Thread.Sleep(2000);
     Console.Clear();
@@ -70,7 +71,7 @@ void BandasRegistradas()
     Console.Clear();
     ExibirTituloOpcoes("Bandas Registradas");
 
-    foreach (string banda in listaBandas)
+    foreach (string banda in bandasRegistradas.Keys)
     {
         Console.WriteLine($"Banda: {banda}");
     } 
@@ -90,6 +91,50 @@ void ExibirTituloOpcoes(string titulo)
     Console.WriteLine(asteriscos + "\n");
 }
 
+void AvaliarBanda()
+{
+    Console.Clear();
+    ExibirTituloOpcoes("Avaliar Banda");
+    Console.WriteLine("Digite o nome da banda que deseja avaliar: ");
+    string nomeBanda = Console.ReadLine()!;
+    if (bandasRegistradas.ContainsKey(nomeBanda))
+    {
+
+        Console.WriteLine($"Qual a nota que a banda {nomeBanda} merece: ");
+        int nota = int.Parse(Console.ReadLine()!);
+        bandasRegistradas[nomeBanda].Add(nota);
+        Console.WriteLine($"A nota {nota} foi registrada com sucesso para a banda {nomeBanda}!");
+        Thread.Sleep(4000);
+        Console.Clear();
+        ExibirOpcoesDoMenu();
+
+    } else
+    {
+        Console.WriteLine($"\nA banda {nomeBanda} não foi encontrada!");
+        Console.WriteLine("Digite uma tecla para volatar ao menu principal: ");
+        Console.ReadKey(true);
+        ExibirOpcoesDoMenu();
+        
+    }
+
+}
+
+void MediaBanda()
+{
+    Console.Clear();
+    ExibirTituloOpcoes("Média da Banda");
+    Console.WriteLine("Digite o nome da banda que deseja consultar a média das notas: ");
+    string nomeBanda = Console.ReadLine()!;
+    if(bandasRegistradas.ContainsKey(nomeBanda))
+    {
+        double mediaNotas = bandasRegistradas[nomeBanda].Average();
+        Console.WriteLine(mediaNotas.ToString());
+        Thread.Sleep(4000);
+        Console.Clear();
+        ExibirOpcoesDoMenu();
+    }
+
+}
 
 ExibirOpcoesDoMenu();
 RegistrarBanda();
